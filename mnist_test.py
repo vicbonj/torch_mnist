@@ -46,10 +46,10 @@ optimizer = optim.Adam(net.parameters(), eps=1e-7)
 
 epochs = 5
 
-torch.backends.cudnn.enabled = True
-torch.backends.cudnn.benchmark = True
+#torch.backends.cudnn.enabled = True
+#torch.backends.cudnn.benchmark = True
 
-scaler = GradScaler()
+#scaler = GradScaler()
 
 for e in range(epochs):
     print('Epoch {}'.format(e))
@@ -75,9 +75,9 @@ for e in range(epochs):
         with autocast():
             output = net(images)
             loss = criterion(output, labels)
-        scaler.scale(loss).backward()
-        scaler.step(optimizer)
-        scaler.update()
-        #loss.backward()
-        #optimizer.step()
+        #scaler.scale(loss).backward()
+        #scaler.step(optimizer)
+        #scaler.update()
+        loss.backward()
+        optimizer.step()
     

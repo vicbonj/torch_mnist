@@ -37,7 +37,7 @@ data_test_loader = DataLoader(TMPDataset(x_test, y_test), batch_size=1024, num_w
 net = LeNet5().type(torch.cuda.FloatTensor)
 if torch.cuda.device_count() > 1:
     net = nn.DataParallel(net)
-criterion = nn.CrossEntropyLoss()
+criterion = nn.CrossEntropyLoss().type(torch.cuda.FloatTensor)
 optimizer = optim.Adam(net.parameters(), lr=2e-3)
 
 epochs = 10

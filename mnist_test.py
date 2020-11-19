@@ -47,8 +47,8 @@ torch.backends.cudnn.benchmark = True
 for e in range(epochs):
     print('Epoch {}'.format(e))
     for i, (images, labels) in tqdm(enumerate(data_train_loader)):
-        images.type(torch.cuda.FloatTensor)
-        labels.type(torch.cuda.FloatTensor)
+        images = images.type(torch.cuda.FloatTensor)
+        labels = labels.type(torch.cuda.FloatTensor)
         
         optimizer.zero_grad()
         output = net(images)

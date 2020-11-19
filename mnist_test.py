@@ -19,7 +19,6 @@ y_train = y_train.astype(np.int64)
 y_test = y_test.astype(np.int64)
 
 class TMPDataset(Dataset):
-
     def __init__(self, a, b):
         self.x = a
         self.y = b
@@ -30,25 +29,44 @@ class TMPDataset(Dataset):
     def __len__(self):
         return len(self.y)
 
-data_train_loader = DataLoader(TMPDataset(x_train, y_train), batch_size=256, shuffle=True, num_workers=8)
-data_test_loader = DataLoader(TMPDataset(x_test, y_test), batch_size=1024, num_workers=8)
+batch_size = 256
+    
+data_train_loader = DataLoader(TMPDataset(x_train, y_train), batch_size=batch_size, shuffle=True, num_workers=1)
+data_test_loader = DataLoader(TMPDataset(x_test, y_test), batch_size=batch_size, num_workers=1)
 
-net = LeNet5().type(torch.cuda.FloatTensor)
-if torch.cuda.device_count() > 1:
-    net = nn.DataParallel(net)
-criterion = nn.CrossEntropyLoss().type(torch.cuda.FloatTensor)
-optimizer = optim.Adam(net.parameters(), lr=2e-3)
+x_train_t = torch.from_numpy(x_train).cuda()
+y_train_t = torch.from_numpy(y_train).cuda()
 
-epochs = 10
+net = LeNet5().cuda()
+#if torch.cuda.device_count() > 1:
+#    net = nn.DataParallel(net)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(net.parameters(), eps=1e-7)
+
+epochs = 5
 
 torch.backends.cudnn.enabled = True
 torch.backends.cudnn.benchmark = True
 for e in range(epochs):
     print('Epoch {}'.format(e))
+    
+    '''
     for i, (images, labels) in tqdm(enumerate(data_train_loader)):
-        images = images.type(torch.cuda.FloatTensor)
-        labels = labels.type(torch.cuda.FloatTensor)
+        images = images.cuda()
+        labels = labels.cuda()
+        #images = torch.autograd.Variable(images.cuda())
+        #labels = torch.autograd.Variable(labels.cuda())
         
+        optimizer.zero_grad()
+        output = net(images)
+        loss = criterion(output, labels)
+        loss.backward()
+        optimizer.step()
+    '''
+    
+    for i in tqdm(range(int(len(x_train_t)/batch_size))):
+        images = x_train_t[int(i*batch_size):int(i*batch_size+batch_size)]
+        labels = y_train_t[int(i*batch_size):int(i*batch_size+batch_size)]
         optimizer.zero_grad()
         output = net(images)
         loss = criterion(output, labels)

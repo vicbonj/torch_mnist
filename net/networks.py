@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.cuda.amp import autocast
 
 class LeNet5(nn.Module):
     def __init__(self):
@@ -16,7 +17,8 @@ class LeNet5(nn.Module):
         self.last_act = nn.Softmax(dim=1)
         self.drop1 = nn.Dropout(0.5)
         self.drop2 = nn.Dropout(0.2)
-        
+
+    @autocast()
     def forward(self, x):
         output = self.maxpool(self.relu(self.conv1(x)))
         output = self.maxpool(self.relu(self.conv2(output)))

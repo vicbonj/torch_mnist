@@ -8,6 +8,7 @@ import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from keras.datasets import mnist
 from tqdm import tqdm
+from torch.cuda.amp import autocast, GradScaler
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -47,6 +48,9 @@ epochs = 5
 
 torch.backends.cudnn.enabled = True
 torch.backends.cudnn.benchmark = True
+
+scaler = GradScaler()
+
 for e in range(epochs):
     print('Epoch {}'.format(e))
     
@@ -68,7 +72,12 @@ for e in range(epochs):
         images = x_train_t[int(i*batch_size):int(i*batch_size+batch_size)]
         labels = y_train_t[int(i*batch_size):int(i*batch_size+batch_size)]
         optimizer.zero_grad()
-        output = net(images)
-        loss = criterion(output, labels)
-        loss.backward()
-        optimizer.step()
+        with autocast():
+            output = net(images)
+            loss = criterion(output, labels)
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
+        #loss.backward()
+        #optimizer.step()
+    

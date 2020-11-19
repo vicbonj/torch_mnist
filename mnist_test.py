@@ -23,7 +23,9 @@ x_test_cnn = np.expand_dims(x_test, -1)
 data_train_loader = DataLoader((x_train_cnn, y_train_cnn), batch_size=256, shuffle=True, num_workers=8)
 data_test_loader = DataLoader((x_test_cnn, y_test_cnn), batch_size=1024, num_workers=8)
 
-net = LeNet5()
+net = LeNet5().type(torch.cuda.FloatTensor)
+if torch.cuda.device_count() > 1:
+    net = nn.DataParallel(net)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=2e-3)
 

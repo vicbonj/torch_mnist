@@ -20,8 +20,9 @@ class LeNet5(nn.Module):
         output = self.maxpool(self.relu(self.conv1(x)))
         print(output.size())
         x = self.maxpool(self.relu(self.conv2(output)))
-        print(output.size())
+        print(x.size())
         output = self.maxpool(self.relu(self.conv2(output)))
+        print(output.size())
         output += x
         output = self.relu(self.conv3(output))
         output = output.view(img.size(0), -1)

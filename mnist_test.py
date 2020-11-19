@@ -42,6 +42,8 @@ optimizer = optim.Adam(net.parameters(), lr=2e-3)
 
 epochs = 10
 
+torch.backends.cudnn.enabled = True
+torch.backends.cudnn.benchmark = True
 for e in range(epochs):
     print('Epoch {}'.format(e))
     for i, (images, labels) in tqdm(enumerate(data_train_loader)):

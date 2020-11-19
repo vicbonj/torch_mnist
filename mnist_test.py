@@ -1,5 +1,6 @@
 from net.networks import LeNet5
 import numpy as np
+import keras
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -28,6 +29,8 @@ if torch.cuda.device_count() > 1:
     net = nn.DataParallel(net)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=2e-3)
+
+epochs = 10
 
 for e in range(epochs):
     print('Epoch {}'.format(e))

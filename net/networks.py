@@ -16,8 +16,11 @@ class LeNet5(nn.Module):
         self.last_act = nn.LogSoftmax(dim=-1)
         
     def forward(self, x):
+        print(x.size())
         output = self.maxpool(self.relu(self.conv1(x)))
+        print(output.size())
         x = self.maxpool(self.relu(self.conv2(output)))
+        print(output.size())
         output = self.maxpool(self.relu(self.conv2(output)))
         output += x
         output = self.relu(self.conv3(output))

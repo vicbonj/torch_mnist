@@ -2,6 +2,7 @@ from net.networks import LeNet5
 import numpy as np
 import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from keras.datasets import mnist

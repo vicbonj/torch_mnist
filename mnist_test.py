@@ -13,11 +13,10 @@ from tqdm import tqdm
 
 x_train = x_train.reshape((-1, 1, 28, 28)).astype('float32')
 x_test = x_test.reshape((-1, 1, 28, 28)).astype('float32')
-x_train /= 255
-x_test /= 255
-
-#x_train_cnn = np.expand_dims(x_train, -1)
-#x_test_cnn = np.expand_dims(x_test, -1)
+x_train /= 255.
+x_test /= 255.
+y_train = y.astype(np.int64)
+y_test = y.astype(np.int64)
 
 class TMPDataset(Dataset):
 
